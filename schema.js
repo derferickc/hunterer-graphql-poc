@@ -15,7 +15,8 @@ const CardType = new GraphQLObjectType({
     fields: () => ({
         CardId: {type:GraphQLString},
         Name: {type:GraphQLString},
-        Language: {type:GraphQLInt}
+        Language: {type:GraphQLInt},
+        // Type: {type:GraphQLList}
     })
 })
 
