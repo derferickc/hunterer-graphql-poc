@@ -6,8 +6,7 @@ import {
   InMemoryCache
 } from '@apollo/client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Decks from './components/Decks';
-import Carddetail from './components/Carddetail';
+import Deck from './components/Deck';
 import './App.css';
 
 const client = new ApolloClient({
@@ -25,8 +24,7 @@ function App() {
             alt="Magic.GG Logo"
             style={{ width: 300, display: 'block', margin: 'auto' }} />
 
-            <Route exact path="/" component={Decks}/>
-            <Route exact path="/carddetail/:card_id" component ={Carddetail} />
+            <Route exact path="/" component={Deck}/>
         </div>
       </Router>
     </ApolloProvider>

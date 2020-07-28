@@ -9,22 +9,14 @@ const {
     GraphQLBoolean
 } = require('graphql');
 
-// Deck Type
-const DeckType = new GraphQLObjectType({
-    name: 'Deck',
-    fields: () => ({
-        CardId: {type:GraphQLString},
-        Name: {type:GraphQLString},
-        Language: {type:GraphQLInt}
-    })
-})
-
 // Card Type
 const CardType = new GraphQLObjectType({
     name: 'Card',
     fields: () => ({
-        OperationResult: {type:GraphQLString},
-        CardData: {type:CardDataType}
+        _id: {type:GraphQLString},
+        _index: {type:GraphQLString},
+        _type: {type:GraphQLString},
+        _source: {type:CardDataType}
     })
 })
 
@@ -32,15 +24,15 @@ const CardType = new GraphQLObjectType({
 const CardDataType = new GraphQLObjectType({
     name: 'CardData',
     fields: () => ({
-        CardFeature: {type:CardFeatureType}
-    })
-})
-
-// CardFeature Type
-const CardFeatureType = new GraphQLObjectType({
-    name: 'CardFeature',
-    fields: () => ({
-        Id: {type:GraphQLInt}
+        LanguageCode: {type:GraphQLString},
+        EnglishCardTitle: {type:GraphQLString},
+        RulesText: {type:GraphQLString},
+        ManaCost: {type:GraphQLString},
+        ConvertedManaCost: {type:GraphQLString},
+        ArtistCredit: {type:GraphQLString},
+        SetName: {type:GraphQLString},
+        SeriesNumber: {type:GraphQLString},
+        ReleaseDate: {type:GraphQLString}
     })
 })
 
@@ -49,57 +41,24 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
         search: {
-            type: new GraphQLList(DeckType),
+            type: new GraphQLList(CardType),
             resolve(parentValue, args) {
-                return axios.post('https://api.hunterer.wizards.com/Business/CardSearch/Web/Search',
-                    {
-                        "FirstResult":1,
-                        "MaxResults":499,
-                        "SearchTerms":[
-                             {
-                                   "Id":15,"Value":"serra"
-                             }],
-                        "UseAndForColor":true,
-                        "UseExactColor":true
-                  }
+                return axios.post('https://search-gatnext-dev-v3txm6mfpuusi3lqd7f4vod2xq.us-west-2.es.amazonaws.com/_search',
+                {
+                    "query": {
+                        "bool": {
+                            "filter": [
+                                { "term": { "CardColor": "r"   }},
+                                { "term": { "SetCode": "xln" }},
+                                { "term": { "LanguageCode": "en-us" }}
+                            ]
+                        }
+                    }
+                }
                 )
-                .then(res => res.data.CardData);
-            }
-        },
-        random: {
-            type: new GraphQLList(DeckType),
-            resolve(parentValue, args) {
-                return axios.post('https://api.hunterer.wizards.com/Business/CardSearch/Web/GetRandomCard',
-                    {
-                        "FirstResult":1,
-                        "MaxResults":499,
-                        "SearchTerms":[
-                             {
-                                   "Id":15,"Value":"serra"
-                             }],
-                        "UseAndForColor":true,
-                        "UseExactColor":true
-                  }
-                )
-                .then(res => res.data.CardData);
-            }
-        },
-        cardinfo: {
-            type: new GraphQLNonNull(CardType),
-            args: {
-                CardID:{type: new GraphQLNonNull(GraphQLString)},
-                // IncludeOracle:{type:GraphQLBoolean},
-                // IncludePrinting:{type:GraphQLBoolean},
-                // IncludeRulings:{type:GraphQLBoolean},
-                // IncludeLegality:{type:GraphQLBoolean},
-            },
-            // CardID: "009e4cdc-4674-4551-abee-18fd343fd97f", IncludeOracle:true, IncludeRulings:true, IncludePrinting:true, IncludeLegality:true
-            resolve(parentValue, args) {
-               return axios.get('https://api.hunterer.wizards.com/Business/CardSearch/Web/GetCardInfo?CARDID='+args.CardID)
-                .then(res => res.data);
+                .then(res => res.data.hits.hits);
             }
         }
-
     }
 });
 
