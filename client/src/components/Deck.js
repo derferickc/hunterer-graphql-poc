@@ -32,7 +32,7 @@ export default function Deck() {
     console.log(data.search)
     return (
         <React.Fragment>
-            <h1 className="display-4 my-3 text-center">CHALLENGER DECKS 2020 ({data.search.length} Cards)</h1>
+            <h1 className="display-4 my-3 text-center">CHALLENGER DECK 2020 ({data.search.length} Cards)</h1>
             {
                 data.search.map((card) => (
                     <Cards
