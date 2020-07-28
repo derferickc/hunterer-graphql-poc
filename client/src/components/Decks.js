@@ -21,7 +21,6 @@ export default function Decks() {
     return (
         <React.Fragment>
             <h1 className="display-4 my-3 text-center">Decks</h1>
-            {/* <MissionKey /> */}
             {
                 data.search.map((card) => (
                     <Card

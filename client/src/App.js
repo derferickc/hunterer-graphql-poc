@@ -5,7 +5,9 @@ import {
   ApolloProvider,
   InMemoryCache
 } from '@apollo/client';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Decks from './components/Decks';
+import Carddetail from './components/Carddetail';
 import './App.css';
 
 const client = new ApolloClient({
@@ -16,14 +18,17 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div className="App">
-        <img
-          src={logo}
-          alt="Magic.GG Logo"
-          style={{ width: 300, display: 'block', margin: 'auto' }} />
+      <Router>
+        <div className="App">
+          <img
+            src={logo}
+            alt="Magic.GG Logo"
+            style={{ width: 300, display: 'block', margin: 'auto' }} />
 
-          <Decks />
-      </div>
+            <Route exact path="/" component={Decks}/>
+            <Route exact path="/carddetail/:card_id" component ={Carddetail} />
+        </div>
+      </Router>
     </ApolloProvider>
   );
 }
