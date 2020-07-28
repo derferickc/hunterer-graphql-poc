@@ -9,14 +9,22 @@ const {
     GraphQLBoolean
 } = require('graphql');
 
+// Deck Type
+const DeckType = new GraphQLObjectType({
+    name: 'Deck',
+    fields: () => ({
+        CardId: {type:GraphQLString},
+        Name: {type:GraphQLString},
+        Language: {type:GraphQLInt}
+    })
+})
+
 // Card Type
 const CardType = new GraphQLObjectType({
     name: 'Card',
     fields: () => ({
-        CardId: {type:GraphQLString},
-        Name: {type:GraphQLString},
-        Language: {type:GraphQLInt},
-        // Type: {type:GraphQLList}
+        OperationResult: {type:GraphQLString},
+        CardData: {type:CardDataType}
     })
 })
 
@@ -24,7 +32,15 @@ const CardType = new GraphQLObjectType({
 const CardDataType = new GraphQLObjectType({
     name: 'CardData',
     fields: () => ({
-        OperationResult: {type:GraphQLString}
+        CardFeature: {type:CardFeatureType}
+    })
+})
+
+// CardFeature Type
+const CardFeatureType = new GraphQLObjectType({
+    name: 'CardFeature',
+    fields: () => ({
+        Id: {type:GraphQLInt}
     })
 })
 
@@ -33,7 +49,7 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
         search: {
-            type: new GraphQLList(CardType),
+            type: new GraphQLList(DeckType),
             resolve(parentValue, args) {
                 return axios.post('https://api.hunterer.wizards.com/Business/CardSearch/Web/Search',
                     {
@@ -51,7 +67,7 @@ const RootQuery = new GraphQLObjectType({
             }
         },
         random: {
-            type: new GraphQLList(CardType),
+            type: new GraphQLList(DeckType),
             resolve(parentValue, args) {
                 return axios.post('https://api.hunterer.wizards.com/Business/CardSearch/Web/GetRandomCard',
                     {
@@ -69,7 +85,7 @@ const RootQuery = new GraphQLObjectType({
             }
         },
         cardinfo: {
-            type: new GraphQLNonNull(CardDataType),
+            type: new GraphQLNonNull(CardType),
             args: {
                 CardID:{type: new GraphQLNonNull(GraphQLString)},
                 // IncludeOracle:{type:GraphQLBoolean},
