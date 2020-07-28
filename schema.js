@@ -32,7 +32,8 @@ const CardDataType = new GraphQLObjectType({
         ArtistCredit: {type:GraphQLString},
         SetName: {type:GraphQLString},
         SeriesNumber: {type:GraphQLString},
-        ReleaseDate: {type:GraphQLString}
+        ReleaseDate: {type:GraphQLString},
+        CardSubTypes: {type:GraphQLList(GraphQLString)}
     })
 })
 

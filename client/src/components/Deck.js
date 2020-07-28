@@ -18,6 +18,7 @@ const DECKS_QUERY = gql`
                 SetName
                 SeriesNumber
                 ReleaseDate
+                CardSubTypes
             }
       }
     }
@@ -28,19 +29,19 @@ export default function Deck() {
 
     if(loading) return <h4>Loading...</h4>
     if(error) return <h4>Error: {error}</h4>
-    console.log(data)
+    console.log(data.search)
     return (
         <React.Fragment>
-            <h1 className="display-4 my-3 text-center">Deck</h1>
+            <h1 className="display-4 my-3 text-center">CHALLENGER DECKS 2020 ({data.search.length} Cards)</h1>
             {
                 data.search.map((card) => (
                     <Cards
                         key={card._id}
-                        card={card._source}
+                        card={card}
+                        carddetails={card._source}
                     />
                 ))
             }
-            SWAG
         </React.Fragment>
     )
 }
